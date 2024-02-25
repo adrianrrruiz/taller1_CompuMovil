@@ -13,14 +13,22 @@ class MainActivity2 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
+        val intent = intent
+        val filtroSeleccionado = intent.getStringExtra("filtroSeleccionado")
+
         val json = JSONObject(loadJSONFromAsset())
         val destinosJsonArray = json.getJSONArray("destinos")
         val nombreDestinos = ArrayList<String>()
 
-        for (i in 0 until destinosJsonArray.length()){
-            val jsonObject = destinosJsonArray.getJSONObject(i)
-            val nombre = jsonObject.getString("nombre")
-            nombreDestinos.add((nombre))
+        if(!filtroSeleccionado.isNullOrEmpty()) {
+            for (i in 0 until destinosJsonArray.length()) {
+                val jsonObject = destinosJsonArray.getJSONObject(i)
+                val nombre = jsonObject.getString("nombre")
+                val categoria = jsonObject.getString("categoria")
+                if (categoria.equals(filtroSeleccionado) || filtroSeleccionado == "Todos") {
+                    nombreDestinos.add((nombre))
+                }
+            }
         }
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, nombreDestinos)
