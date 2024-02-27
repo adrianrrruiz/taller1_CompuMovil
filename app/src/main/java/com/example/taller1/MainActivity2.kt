@@ -1,9 +1,13 @@
 package com.example.taller1
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import com.example.taller1.model.Destino
+import com.google.gson.Gson
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
@@ -24,9 +28,9 @@ class MainActivity2 : AppCompatActivity() {
             for (i in 0 until destinosJsonArray.length()) {
                 val jsonObject = destinosJsonArray.getJSONObject(i)
                 val nombre = jsonObject.getString("nombre")
-                val categoria = jsonObject.getString("categoria")
-                if (categoria.equals(filtroSeleccionado) || filtroSeleccionado == "Todos") {
-                    nombreDestinos.add((nombre))
+                val categoria = jsonObject.getString("categoria").trim().uppercase();
+                if (categoria.equals(filtroSeleccionado.trim().uppercase()) || filtroSeleccionado == "Todos") {
+                    nombreDestinos.add(nombre)
                 }
             }
         }
@@ -34,6 +38,13 @@ class MainActivity2 : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, nombreDestinos)
         val listView = findViewById<ListView>(R.id.listView)
         listView.adapter = adapter
+
+        listView.setOnItemClickListener { adapterView , view, position, id ->
+            val intent = Intent(this, DetallesDestino::class.java)
+
+            intent.putExtra("destinoSeleccionado", findDestination(nombreDestinos[position], destinosJsonArray))
+            startActivity(intent)
+        }
     }
 
     fun loadJSONFromAsset(): String?{
@@ -51,5 +62,23 @@ class MainActivity2 : AppCompatActivity() {
             return null
         }
         return json
+    }
+
+    fun findDestination(nombre: String, destinosJsonArray : JSONArray): String?{
+        for(i in 0 until destinosJsonArray.length()){
+            val jsonObject = destinosJsonArray.getJSONObject(i)
+            val nombreJSON = jsonObject.getString("nombre")
+            if(nombre == nombreJSON){
+                val gson = Gson()
+                val paisJSON = jsonObject.getString("pais")
+                val categoriaJSON = jsonObject.getString("categoria")
+                val planJSON = jsonObject.getString("plan")
+                val precioJSON = jsonObject.getString("precio").toInt()
+                val destino = Destino(0,nombreJSON,paisJSON,categoriaJSON,planJSON,precioJSON)
+                val json = gson.toJson(destino)
+                return json;
+            }
+        }
+        return ""
     }
 }
