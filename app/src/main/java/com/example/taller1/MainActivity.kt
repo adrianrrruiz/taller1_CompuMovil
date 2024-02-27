@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val botonExplorar = findViewById<Button>(R.id.button1)
+        val botonFavoritos = findViewById<Button>(R.id.button2)
         val spinner = findViewById<Spinner>(R.id.spinner)
         var filtroSeleccionado = ""
 
@@ -31,6 +32,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity2::class.java)
             intent.putExtra("filtroSeleccionado", filtroSeleccionado)
             startActivity(intent)
+        }
+
+        botonFavoritos.setOnClickListener {
+            val intent2 = Intent (this, DestinosFavoritos::class.java)
+            startActivity(intent2)
         }
     }
 }

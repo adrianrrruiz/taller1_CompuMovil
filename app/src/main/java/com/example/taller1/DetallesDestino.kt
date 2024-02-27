@@ -1,8 +1,10 @@
 package com.example.taller1
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import com.example.taller1.model.Destino
 import com.google.gson.Gson
@@ -13,6 +15,8 @@ class DetallesDestino : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalles_destino)
+
+        val botonFavoritos = findViewById<Button>(R.id.favoritos)
 
         val intent = intent
         val destinoSeleccionado = intent.getStringExtra("destinoSeleccionado")
@@ -30,6 +34,12 @@ class DetallesDestino : AppCompatActivity() {
         categoriaTxt.text = destino.categoria
         planTxt.text = destino.plan
         precioTxt.text = "USD " + destino.precio.toString()
+
+        botonFavoritos.setOnClickListener {
+            val intent = Intent (this, DestinosFavoritos::class.java)
+            intent.putExtra("nombreDestino", destino.nombre)
+            startActivity(intent)
+        }
 
     }
 }
