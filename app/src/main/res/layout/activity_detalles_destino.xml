@@ -54,6 +54,15 @@
         android:layout_centerInParent="true"
         android:layout_below="@+id/plan"/>
 
+    <TextView
+        android:id="@+id/temperatura"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text=""
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/precio"/>
+
     <Button
         android:id="@+id/favoritos"
         android:layout_width="match_parent"

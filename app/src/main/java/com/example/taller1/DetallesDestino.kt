@@ -7,9 +7,16 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import com.example.taller1.model.Destino
+import com.example.taller1.model.WeatherResponse
+import com.example.taller1.services.IWeatherService
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class DetallesDestino : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +47,34 @@ class DetallesDestino : AppCompatActivity() {
             intent.putExtra("nombreDestino", destino.nombre)
             startActivity(intent)
         }
+        getWeather(destino.pais)
 
+    }
+    private fun getWeather(city: String) {
+        val temperaturaTxt = findViewById<TextView>(R.id.temperatura)
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.weatherapi.com/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val service = retrofit.create(IWeatherService::class.java)
+        val call = service.getCurrentWeather(city, "7dc64ee5f1934d7cabe193311242702")
+
+        call.enqueue(object : Callback<WeatherResponse> {
+            override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
+                if (response.isSuccessful) {
+                    val weatherData = response.body()
+                    if (weatherData != null) {
+                        temperaturaTxt.text = weatherData.current.temp_c.toString() + " °C"
+                    }
+                } else {
+                    // Manejar casos de respuesta no exitosa, como errores 4xx/5xx
+                }
+            }
+
+            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+                // Aquí manejas errores de red o problemas de serialización
+            }
+        })
     }
 }
