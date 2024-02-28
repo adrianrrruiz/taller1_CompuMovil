@@ -4,35 +4,26 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import com.example.taller1.model.Destino
 
 class DestinosFavoritos : AppCompatActivity() {
-    val destinosFavoritos = ArrayList<String>()
+    private lateinit var listView: ListView
+    private lateinit var adapter: ArrayAdapter<String> // Adaptador para mostrar solo los nombres de los destinos
+    private var destinosFavoritos: MutableList<Destino> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_destinos_favoritos)
 
-        val datosGuardados = savedInstanceState?.getStringArrayList("destinosFavoritos")
-        datosGuardados?.let {
-            destinosFavoritos.addAll(it)
-        }
+        listView = findViewById(R.id.destinosFav)
 
-        val nombreDestino = intent.getStringExtra("nombreDestino")
+        // Obtener la lista de destinos favoritos del companion object en MainActivity
+        destinosFavoritos = MainActivity.destinosFavoritos
+        val nombresDestinos = destinosFavoritos.map { it.nombre }
 
-        nombreDestino?.let {
-            destinosFavoritos.add(it)
-            actualizarDestinosFavoritos()
-        }
-
-    }
-    private fun actualizarDestinosFavoritos (){
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, destinosFavoritos)
-        val listView = findViewById<ListView>(R.id.destinosFav)
+        // Actualizar la interfaz de usuario con la lista de nombres de destinos favoritos
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, nombresDestinos)
         listView.adapter = adapter
-    }
-
-    fun guardarLista (outState: Bundle){
-        outState.putStringArrayList("destinosFavoritos", destinosFavoritos)
-        super.onSaveInstanceState(outState)
     }
 
 }
