@@ -9,12 +9,16 @@ import android.widget.Button
 import android.widget.Spinner
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        val destinosFavoritos = mutableListOf<Destino>()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val botonExplorar = findViewById<Button>(R.id.button1)
         val botonFavoritos = findViewById<Button>(R.id.button2)
+        val botonRecomendado = findViewById<Button>(R.id.button3)
         val spinner = findViewById<Spinner>(R.id.spinner)
         var filtroSeleccionado = ""
 
@@ -37,6 +41,11 @@ class MainActivity : AppCompatActivity() {
         botonFavoritos.setOnClickListener {
             val intent2 = Intent (this, DestinosFavoritos::class.java)
             startActivity(intent2)
+        }
+        
+        botonRecomendado.setOnClickListener{
+            val intent3 = Intent (this, DestinoRecomendado::class.java)
+            startActivity(intent3)
         }
     }
 }
