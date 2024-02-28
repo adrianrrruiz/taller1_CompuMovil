@@ -17,6 +17,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import android.widget.Toast
 
 class DetallesDestino : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,9 +44,9 @@ class DetallesDestino : AppCompatActivity() {
         precioTxt.text = "USD " + destino.precio.toString()
 
         botonFavoritos.setOnClickListener {
-            val intent = Intent (this, DestinosFavoritos::class.java)
-            intent.putExtra("nombreDestino", destino.nombre)
-            startActivity(intent)
+            val destino = // obtener el destino correspondiente
+                MainActivity.destinosFavoritos.add(destino)
+            Toast.makeText(this, "Añadido a favoritos", Toast.LENGTH_SHORT).show()
         }
         getWeather(destino.pais)
 
